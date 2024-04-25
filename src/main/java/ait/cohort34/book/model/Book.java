@@ -13,6 +13,7 @@ import java.util.Set;
 @Entity
 @Table(name = "book")
 public class Book {
+
     @Id
     @Column(name = "isbn")
     String isbn;
@@ -22,9 +23,14 @@ public class Book {
             @JoinTable(
                     name = "book_authors",
                     joinColumns = @JoinColumn(name = "book_isbn"),
-                    inverseJoinColumns = @JoinColumn(name = "authors_name")
+                    inverseJoinColumns = @JoinColumn(name = "author_name")
             )
     Set<Author> authors;
     @ManyToOne
+            @JoinTable(
+                    name = "book_publisher",
+                    joinColumns = @JoinColumn(name = "book_isbn"),
+                    inverseJoinColumns = @JoinColumn(name = "publisher_publisher_name")
+    )
     Publisher publisher;
 }

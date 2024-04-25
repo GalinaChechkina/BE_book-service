@@ -17,12 +17,16 @@ public class PublisherReposititoryImpl implements PublisherRepository{
 
     @Override
     public List<String> findByPublishersAuthor(String authorName) {
-        return List.of();
+        List<String> publishers = em.createQuery("select b.publisher.publisherName from Book b JOIN b.authors a where a.name=:authorName", String.class)
+                .setParameter("authorName",authorName)
+                .getResultList();
+        return publishers;
     }
 
     @Override
     public Stream<Publisher> findDistinctByBooksAuthorsName(String authorName) {
-        return Stream.empty();
+//не разобралась, как делать
+        return Stream.of();
     }
 
     @Override

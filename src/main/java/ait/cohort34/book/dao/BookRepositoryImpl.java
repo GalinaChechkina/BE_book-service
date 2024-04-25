@@ -5,6 +5,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -16,17 +17,23 @@ public class BookRepositoryImpl implements BookRepository {
 
     @Override
     public Stream<Book> findByAuthorsName(String authorName) {
-        return Stream.empty();
+        List<Book> books = em.createQuery("select b from Book b join b.authors a where a.name=:authorName", Book.class)
+                .setParameter("authorName", authorName)
+                .getResultList();
+        return books.stream();
     }
 
     @Override
     public Stream<Book> findByPublisherPublisherName(String name) {
-        return Stream.empty();
+        List<Book>books = em.createQuery("select b from Book b where b.publisher.publisherName=:name", Book.class)
+                .setParameter("name",name)
+                .getResultList();
+        return books.stream();
     }
 
     @Override
     public void deleteByAuthorsName(String name) {
-
+// не разобралась
     }
 
     @Override
@@ -42,11 +49,15 @@ public class BookRepositoryImpl implements BookRepository {
 
     @Override
     public Optional<Book> findById(String isbn) {
-        return Optional.empty();
+        Book book = em.find(Book.class,isbn);
+        return Optional.ofNullable(book);
     }
 
     @Override
     public void deleteById(String isbn) {
-
+        Book book = em.find(Book.class,isbn);
+        if(book!=null){
+            em.remove(book);
+        }
     }
 }
