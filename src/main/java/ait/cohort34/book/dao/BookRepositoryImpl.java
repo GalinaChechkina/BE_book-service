@@ -17,23 +17,23 @@ public class BookRepositoryImpl implements BookRepository {
 
     @Override
     public Stream<Book> findByAuthorsName(String authorName) {
-        List<Book> books = em.createQuery("select b from Book b join b.authors a where a.name=:authorName", Book.class)
-                .setParameter("authorName", authorName)
-                .getResultList();
-        return books.stream();
+        return em.createQuery("select b from Book b join b.authors a where a.name=?1", Book.class)
+                .setParameter(1, authorName)//в запросе м. использовать номер параметра (1)
+                .getResultStream();
     }
 
     @Override
     public Stream<Book> findByPublisherPublisherName(String name) {
-        List<Book>books = em.createQuery("select b from Book b where b.publisher.publisherName=:name", Book.class)
-                .setParameter("name",name)
-                .getResultList();
-        return books.stream();
+        return em.createQuery("select b from Book b join b.publisher p where p.publisherName=:name", Book.class)
+                .setParameter("name",name)//а м. использовать название параметра (name)
+                .getResultStream();
     }
 
     @Override
     public void deleteByAuthorsName(String name) {
-// не разобралась
+        em.createQuery("delete from Book b where :name member of b.authors")
+                 .setParameter("name", name)
+                 .executeUpdate();
     }
 
     @Override
@@ -56,8 +56,6 @@ public class BookRepositoryImpl implements BookRepository {
     @Override
     public void deleteById(String isbn) {
         Book book = em.find(Book.class,isbn);
-        if(book!=null){
-            em.remove(book);
-        }
+            em.remove(book);//не надо проверять- обработаем ошибку в сервисе
     }
 }

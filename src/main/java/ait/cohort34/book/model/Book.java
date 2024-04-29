@@ -31,6 +31,7 @@ public class Book {
                     name = "book_publisher",
                     joinColumns = @JoinColumn(name = "book_isbn"),
                     inverseJoinColumns = @JoinColumn(name = "publisher_publisher_name")
-    )
+            )
+            //@JoinColumn (name = "publisher_publisher_name")
     Publisher publisher;
 }
